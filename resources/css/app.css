@@ -1,0 +1,131 @@
+/* =========================
+   GLOBAL RESET & TRANSISI
+========================= */
+
+html {
+    transition: background-color 200ms ease, color 200ms ease;
+}
+
+* {
+    box-sizing: border-box;
+    transition: background-color 200ms ease,
+                color 200ms ease,
+                border-color 200ms ease;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: #ffffff;
+    color: #1a202c;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark {
+    background-color: #0f172a;
+    color: #e5e7eb;
+}
+
+/* =========================
+   SIDEBAR & MENU
+========================= */
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #166534;
+    color: white;
+}
+
+.menu a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+}
+
+.menu a:hover {
+    background-color: #276749;
+}
+
+.active {
+    font-weight: bold;
+    color: #22c55e;
+}
+
+/* =========================
+   LOGOUT BUTTON
+========================= */
+
+.logout {
+    margin-top: auto;
+}
+
+.logout button {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #c53030;
+    color: white;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.logout button:hover {
+    background-color: #9b2c2c;
+}
+
+/* =========================
+   FORM INPUT
+========================= */
+
+.input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    color: #111827;
+}
+
+body.dark .input {
+    background-color: #1f2937;
+    color: #f9fafb;
+    border-color: #4b5563;
+}
+
+/* =========================
+   HERO SVG
+========================= */
+
+.hero-svg {
+    width: 448px;
+    max-width: none;
+    position: relative;
+}
+
+.dark-only {
+    display: none;
+}
+
+body.dark .dark-only {
+    display: block;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+    }
+
+    .hero-svg {
+        width: 100%;
+    }
+}

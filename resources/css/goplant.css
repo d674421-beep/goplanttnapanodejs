@@ -1,0 +1,304 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ======================================================
+   RESET & GLOBAL
+====================================================== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    transition: background-color 200ms ease, color 200ms ease;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7fafc;
+    color: #111827;
+}
+
+.dark body {
+    background: #111827;
+    color: #e5e7eb;
+}
+
+/* ======================================================
+   LAYOUT
+====================================================== */
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 220px;
+    right: 0;
+    height: 50px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px;
+    gap: 10px;
+    z-index: 150;
+}
+
+.dark .topbar {
+    background: #1f2937;
+    border-bottom-color: #374151;
+}
+
+.content {
+    margin-left: 220px;
+    padding: 80px 30px 30px;
+    min-height: 100vh;
+    color: #e5e7eb;
+}
+
+/* ======================================================
+   SIDEBAR (ADMIN & USER)
+====================================================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 220px;
+    background: #1f2937; /* abu gelap */
+    color: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    z-index: 200;
+}
+
+.sidebar h2 {
+    text-align: center;
+    padding: 20px 0;
+    margin: 0;
+    font-size: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.sidebar .menu a {
+    display: block;
+    padding: 12px 20px;
+    color: #e5e7eb;
+    text-decoration: none;
+}
+
+.sidebar .menu a:hover,
+.sidebar .menu a.active {
+    background: #374151;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* ======================================================
+   CARD
+====================================================== */
+.card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.dark .card {
+    background: #1f2937;
+}
+
+/* ======================================================
+   TABLE
+====================================================== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.table th,
+.table td {
+    border: 1px solid #cbd5e0;
+    padding: 8px;
+    text-align: left;
+}
+
+.table th {
+    background: #edf2f7;
+    font-weight: bold;
+}
+
+.dark .table th {
+    background: #374151;
+    color: #f9fafb;
+}
+
+.dark .table td {
+    background: #1f2937;
+    color: #e5e7eb;
+}
+
+/* ======================================================
+   BUTTON SYSTEM
+====================================================== */
+.btn {
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;          /* ✅ GANTI INI */
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    white-space: nowrap;           /* ✅ TAMBAHAN PENTING */
+}
+
+
+/* Primary */
+.btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+/* Secondary */
+.btn-secondary {
+    background: #374151;
+    color: #f9fafb;
+}
+
+.btn-secondary:hover {
+    background: #4b5563;
+}
+
+/* Danger */
+.btn-danger {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+/* Logout */
+.btn-logout {
+    background: #c53030;
+    color: #ffffff;
+}
+
+.btn-logout:hover {
+    background: #9b2c2c;
+}
+
+/* Theme toggle */
+.btn-theme {
+    background: #e5e7eb;
+    border-radius: 6px;
+}
+
+/* ===== FIX: LINK DI DALAM BUTTON ===== */
+.content a.btn,
+.content a.btn-primary,
+.content a.btn-secondary,
+.content a.btn-danger {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+/* ======================================================
+   LINK & TYPOGRAPHY
+====================================================== */
+/* Link teks biasa (bukan tombol) */
+.content a:not(.btn) {
+    color: #22c55e;
+    text-decoration: none;
+}
+
+.content a:not(.btn):hover {
+    color: #16a34a;
+    text-decoration: underline;
+}
+
+.content a:not(.btn):visited {
+    color: #22c55e;
+}
+
+
+/* ===== JUDUL KONTEN (OVERRIDE LINK HIJAU) ===== */
+.content a.link-title {
+    color: #e5e7eb;       /* abu terang */
+}
+
+.content a.link-title:hover {
+    color: #ffffff;
+}
+
+.content a.link-title:visited {
+    color: #e5e7eb;
+}
+
+
+/* ======================================================
+   NORMALISASI TAILWIND TEXT COLOR
+   (MENCEGAH HIJAU NYASAR)
+====================================================== */
+.content .text-gray-600,
+.content .text-gray-500,
+.content .text-green-500,
+.content .text-green-600 {
+    color: #9ca3af !important;
+}
+
+/* ===== SORT SELECT ===== */
+.select-sort {
+    padding: 8px 10px;
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+}
+
+/* Dark mode */
+.dark .select-sort {
+    background: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: nowrap;   /* PENTING */
+}
+
+.action-buttons form {
+    margin: 0;
+    display: inline-flex; /* KUNCI UTAMA */
+}
+
+
+
+
+
+
+
+
+
+
+/* ======================================================
+   TRANSISI GLOBAL (HALUS, TIDAK MENYILAUKAN)
+====================================================== */
+* {
+    transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        border-color 200ms ease;
+}

@@ -1,0 +1,25 @@
+@extends('admin.layouts.app')
+
+@section('content')
+
+<h1 class="mb-4">Edit Pengingat</h1>
+
+<form action="{{ route('admin.reminders.update', $reminder) }}" method="POST">
+    @csrf
+    @method('PUT')
+
+    @include('admin.reminders._form')
+
+    <div style="margin-top:15px">
+        <button type="submit" class="btn-primary">
+            Update
+        </button>
+
+        <a href="{{ route('admin.reminders.index') }}" class="btn-secondary">
+            Batal
+        </a>
+    </div>
+
+</form>
+
+@endsection
