@@ -314,12 +314,15 @@ input, textarea, select {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.5);
-    display: flex;
+    display: none;   /* DEFAULT HIDDEN */
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    transition: opacity .3s;
 }
+.modal-overlay.show {
+    display: flex;
+}
+
 
 .modal-overlay.hidden {
     display: none;

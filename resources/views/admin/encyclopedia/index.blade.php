@@ -36,11 +36,24 @@
                 <p class="item-content mb-2">{{ $item->content }}</p>
 
                 @if($item->video_url)
-                    <iframe class="item-video mb-2"
-                        src="{{ str_replace('watch?v=', 'embed/', $item->video_url) }}"
-                        allowfullscreen>
-                    </iframe>
+                    @php
+                        preg_match(
+                            '%(?:youtube\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i',
+                            $item->video_url,
+                            $match
+                        );
+                        $videoId = $match[1] ?? null;
+                    @endphp
+
+                    @if($videoId)
+                        <iframe
+                            class="item-video mb-2"
+                            src="https://www.youtube.com/embed/{{ $videoId }}"
+                            allowfullscreen>
+                        </iframe>
+                    @endif
                 @endif
+
 
                 <div class="action-buttons flex gap-2">
                     <a href="{{ route('admin.encyclopedia.edit', $item->id) }}" class="btn btn-edit">Edit</a>
@@ -72,19 +85,6 @@
     </div>
 </div>
 
-{{-- ================= MODAL CSS ================= --}}
-<style>
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0,0,0,0.5);
-    z-index: 9999;
-}
-.modal-overlay.hidden { display: none; }
-</style>
 
 {{-- ================= SCRIPT ================= --}}
 <script>
