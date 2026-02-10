@@ -33,8 +33,9 @@
         <label>Gambar</label>
 
         @if($item->image)
-            <img src="{{ asset('storage/'.$item->image) }}"
-                 class="preview-image">
+            <img src="{{ asset($item->image) }}"
+                class="preview-image">
+
         @endif
 
         <input type="file" name="image">

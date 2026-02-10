@@ -7,8 +7,9 @@
 </h1>
 
 @if($item->image)
-    <img src="{{ asset('storage/'.$item->image) }}"
-         class="detail-image">
+    <img src="{{ asset($item->image) }}"
+        class="detail-image">
+
 @endif
 
 @if($item->video_url)
