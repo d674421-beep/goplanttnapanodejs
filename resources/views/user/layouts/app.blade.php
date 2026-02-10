@@ -2,20 +2,21 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User - GoPlant</title>
 
-    {{-- Theme Init Script --}}
+    {{-- ================= THEME INIT ================= --}}
     <script>
         (function () {
             try {
                 const theme = localStorage.getItem('theme');
                 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                
+
                 if (theme === 'dark' || (!theme && systemDark)) {
                     document.documentElement.classList.add('dark');
                 }
                 
-                // Mark as ready to prevent flash
+                // Mark theme ready
                 document.documentElement.classList.add('theme-ready');
             } catch (e) {
                 document.documentElement.classList.add('theme-ready');
@@ -23,10 +24,7 @@
         })();
     </script>
 
-    {{-- CSS Files --}}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    
-    {{-- Prevent flash inline CSS --}}
+    {{-- ================= PREVENT FLASH ================= --}}
     <style>
         html:not(.theme-ready) body {
             opacity: 0;
@@ -37,84 +35,125 @@
         }
     </style>
 
+    {{-- ================= CSS FILES ================= --}}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/user.css') }}">
+
     @stack('styles')
 </head>
 <body>
-    {{-- TOPBAR --}}
+    {{-- ================= TOPBAR ================= --}}
     <div class="topbar">
-        <button id="toggleTheme" class="btn-theme">🌓 Theme</button>
-        <button onclick="openLogoutModal()" class="btn-logout-top">Logout</button>
+        <button id="toggleTheme" class="btn-theme">
+            <span id="themeIcon">🌓</span>
+        </button>
+
+        <button onclick="openLogoutModal()" class="btn-logout-top">
+            Logout
+        </button>
     </div>
 
-    {{-- SIDEBAR --}}
+    {{-- ================= SIDEBAR ================= --}}
     <div class="sidebar">
         <h2>User GoPlant</h2>
         @include('user.layouts.sidebar')
     </div>
 
-    {{-- CONTENT --}}
+    {{-- ================= CONTENT ================= --}}
     <div class="content">
         <div class="page-container">
             @yield('content')
         </div>
     </div>
 
-    {{-- LOGOUT MODAL --}}
+    {{-- ================= LOGOUT MODAL ================= --}}
     <div id="logoutModal" class="modal-overlay">
         <div class="modal-box">
             <h3 class="modal-title">Keluar dari Akun</h3>
-            <p class="modal-text">Apakah kamu yakin ingin logout?</p>
+
+            <p class="modal-text">
+                Apakah kamu yakin ingin logout?
+            </p>
+
             <div class="modal-actions">
-                <button onclick="closeLogoutModal()" class="btn-secondary">Batal</button>
-                <form method="POST" action="{{ route('logout') }}">
+                <button onclick="closeLogoutModal()" class="btn-secondary">
+                    Batal
+                </button>
+
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf
-                    <button type="submit" class="btn-logout">Ya, Logout</button>
+                    <button type="submit" class="btn-delete">
+                        Ya, Logout
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 
-    {{-- Scripts --}}
+    {{-- ================= SCRIPTS ================= --}}
     <script>
-        // Toggle Theme
-        document.getElementById('toggleTheme')?.addEventListener('click', function () {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            this.textContent = isDark ? '☀️ Light' : '🌓 Theme';
-        });
+        (function() {
+            'use strict';
 
-        // Set initial button text
-        window.addEventListener('DOMContentLoaded', function() {
-            const btn = document.getElementById('toggleTheme');
-            if (btn) {
+            // Theme toggle
+            const toggleBtn = document.getElementById('toggleTheme');
+            const themeIcon = document.getElementById('themeIcon');
+
+            function updateThemeIcon() {
                 const isDark = document.documentElement.classList.contains('dark');
-                btn.textContent = isDark ? '☀️ Light' : '🌓 Theme';
+                if (themeIcon) {
+                    themeIcon.textContent = isDark ? '☀️' : '🌓';
+                }
             }
-        });
 
-        // Modal functions
-        function openLogoutModal() {
-            const modal = document.getElementById('logoutModal');
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
+            // Set initial icon
+            updateThemeIcon();
 
-        function closeLogoutModal() {
-            const modal = document.getElementById('logoutModal');
-            modal.classList.remove('show');
-            document.body.style.overflow = '';
-        }
+            toggleBtn?.addEventListener('click', function () {
+                document.documentElement.classList.toggle('dark');
+                const isDark = document.documentElement.classList.contains('dark');
+                
+                try {
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                } catch (e) {
+                    console.warn('Could not save theme preference');
+                }
+                
+                updateThemeIcon();
+            });
 
-        // Close on outside click
-        document.getElementById('logoutModal')?.addEventListener('click', function(e) {
-            if (e.target === this) closeLogoutModal();
-        });
+            // Modal functions
+            window.openLogoutModal = function() {
+                const modal = document.getElementById('logoutModal');
+                if (modal) {
+                    modal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                }
+            };
 
-        // Close on ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeLogoutModal();
-        });
+            window.closeLogoutModal = function() {
+                const modal = document.getElementById('logoutModal');
+                if (modal) {
+                    modal.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            };
+
+            // Close modal on outside click
+            const logoutModal = document.getElementById('logoutModal');
+            logoutModal?.addEventListener('click', function(e) {
+                if (e.target === logoutModal) {
+                    closeLogoutModal();
+                }
+            });
+
+            // Close modal on ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && logoutModal?.classList.contains('show')) {
+                    closeLogoutModal();
+                }
+            });
+        })();
     </script>
 
     @stack('scripts')
