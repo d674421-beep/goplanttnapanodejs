@@ -4,7 +4,57 @@
     <meta charset="UTF-8">
     <title>Admin - GoPlant</title>
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    
+    {{-- 🔥 CRITICAL: Script ini HARUS di <head> dan BLOCKING (tanpa defer/async) --}}
+    <script>
+        (function () {
+            try {
+                const theme = localStorage.getItem('theme');
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                // Apply theme SEBELUM render body
+                if (theme === 'dark' || (!theme && systemDark)) {
+                    // Tambahkan ke HTML dulu untuk faster rendering
+                    document.documentElement.classList.add('dark-loading');
+                }
+            } catch (e) {
+                console.error('Theme init error:', e);
+            }
+        })();
+    </script>
+
+    {{-- 🔥 Script kedua: Apply ke body setelah DOM ready --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const theme = localStorage.getItem('theme');
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (theme === 'dark' || (!theme && systemDark)) {
+                    document.body.classList.add('dark');
+                }
+                
+                // Remove loading class
+                document.documentElement.classList.remove('dark-loading');
+                
+                // Set initial button text
+                const toggleBtn = document.getElementById('toggleTheme');
+                if (toggleBtn) {
+                    const isDark = document.body.classList.contains('dark');
+                    toggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+                }
+            } catch (e) {
+                console.error('Theme apply error:', e);
+            }
+        });
+    </script>
+
     <style>
+/* Prevent flash of wrong theme */
+html.dark-loading body {
+    visibility: hidden;
+}
+
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -67,23 +117,6 @@ body.dark .modal-text {
     color: #9ca3af;
 }
     </style>
-
-    <script>
-        // ===== Dark Mode Init ===== 
-        (function () {
-            try {
-                const theme = localStorage.getItem('theme');
-                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                
-                // 🔥 UBAH: Gunakan document.body, bukan documentElement
-                if (theme === 'dark' || (!theme && systemDark)) {
-                    document.body.classList.add('dark');
-                }
-            } catch (e) {
-                console.error('Theme init error:', e);
-            }
-        })();
-    </script>
 </head>
 <body>
     <!-- TOPBAR -->
@@ -131,23 +164,13 @@ body.dark .modal-text {
     <script>
         // ===== Dark Mode Toggle =====
         document.getElementById('toggleTheme')?.addEventListener('click', function() {
-            // 🔥 UBAH: Gunakan document.body
             document.body.classList.toggle('dark');
             
             const isDark = document.body.classList.contains('dark');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             
-            // 🎨 Update button text
+            // Update button text
             this.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-        });
-
-        // ===== Set initial button text =====
-        window.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('toggleTheme');
-            if (toggleBtn) {
-                const isDark = document.body.classList.contains('dark');
-                toggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-            }
         });
 
         // ===== Modal Logic =====
@@ -155,29 +178,29 @@ body.dark .modal-text {
         const btnLogoutTop = document.getElementById('btnLogoutTop');
         const btnCancelLogout = document.getElementById('btnCancelLogout');
 
+        function closeLogoutModal() {
+            logoutModal?.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
         btnLogoutTop?.addEventListener('click', () => {
             logoutModal.classList.add('show');
-            document.body.style.overflow = 'hidden'; // Prevent scroll
+            document.body.style.overflow = 'hidden';
         });
 
-        btnCancelLogout?.addEventListener('click', () => {
-            logoutModal.classList.remove('show');
-            document.body.style.overflow = ''; // Restore scroll
-        });
+        btnCancelLogout?.addEventListener('click', closeLogoutModal);
 
-        // Close modal on click outside box
+        // Close modal on click outside
         logoutModal?.addEventListener('click', (e) => {
             if(e.target === logoutModal) {
-                logoutModal.classList.remove('show');
-                document.body.style.overflow = '';
+                closeLogoutModal();
             }
         });
 
-        // Close modal with ESC key
+        // Close modal with ESC
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && logoutModal.classList.contains('show')) {
-                logoutModal.classList.remove('show');
-                document.body.style.overflow = '';
+            if (e.key === 'Escape' && logoutModal?.classList.contains('show')) {
+                closeLogoutModal();
             }
         });
     </script>
