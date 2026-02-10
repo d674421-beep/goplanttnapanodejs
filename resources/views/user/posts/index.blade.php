@@ -68,7 +68,7 @@
                 <td>
                     @if($post->image)
                         <div class="img-wrap">
-                            <img src="{{ asset($post->image) }}">
+                            <img src="{{ asset('storage/'.$post->image) }}">
 
                         </div>
 

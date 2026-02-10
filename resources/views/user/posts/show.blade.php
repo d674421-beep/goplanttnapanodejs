@@ -12,7 +12,8 @@
     </p>
 
     @if($post->image)
-        <img src="{{ asset($post->image) }}" class="post-image">
+        <img src="{{ asset('storage/'.$post->image) }}"
+             style="max-width:500px; margin:20px 0;">
 
     @endif
 

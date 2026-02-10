@@ -37,8 +37,7 @@
         <div class="form-group">
             <label>Gambar</label>
             @if($post->image)
-                <img src="{{ asset($post->image) }}" class="preview-img">
-
+                <img src="{{ asset('storage/'.$post->image) }}" alt="thumbnail">
             @endif
             <input type="file" name="image">
         </div>
