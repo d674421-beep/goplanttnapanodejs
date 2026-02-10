@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'email' => env('ADMIN_EMAIL'),
+    'email'    => env('ADMIN_EMAIL'),
     'password' => env('ADMIN_PASSWORD'),
-    'name' => env('ADMIN_NAME', 'Admin GoPlant'),
+    'name'     => env('ADMIN_NAME', 'Administrator'),
 ];
