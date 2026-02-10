@@ -12,7 +12,8 @@
     </p>
 
     @if($post->image)
-        <img src="{{ asset('storage/'.$post->image) }}" class="post-image">
+        <img src="{{ asset($post->image) }}" class="post-image">
+
     @endif
 
     <div class="content-text">
