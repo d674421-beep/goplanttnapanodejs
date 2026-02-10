@@ -9,16 +9,13 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EmailOtpMail extends Mailable
 {
     public function __construct(
-        public string $otp
     ) {}
 
     public function build()
     {
         return $this->subject('Kode Verifikasi Akun GoPlant')
-            ->view('emails.otp');
     }
 }
 

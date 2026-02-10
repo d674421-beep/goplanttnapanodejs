@@ -12,8 +12,6 @@ return new class extends Migration
     public function up(): void
 	{
 		Schema::table('users', function (Blueprint $table) {
-			$table->string('email_otp', 255)->nullable();
-			$table->timestamp('email_otp_expires_at')->nullable();
 		});
 	}
 
@@ -21,8 +19,6 @@ return new class extends Migration
 	{
 		Schema::table('users', function (Blueprint $table) {
 			$table->dropColumn([
-				'email_otp',
-				'email_otp_expires_at'
 			]);
 		});
 	}

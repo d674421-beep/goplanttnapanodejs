@@ -8,11 +8,21 @@
         <h2 class="auth-title">
             Login GoPlant
         </h2>
+
+        {{-- SUCCESS MESSAGE --}}
+        @if (session('success'))
+            <div class="auth-alert success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        {{-- ERROR MESSAGE --}}
         @if (session('status'))
-            <div class="status approved">
+            <div class="auth-alert error">
                 {{ session('status') }}
             </div>
         @endif
+
 
         <form method="POST" action="{{ route('login') }}" class="auth-form">
             @csrf
@@ -34,7 +44,8 @@
             >
            
             <div class="auth-extra">
-                <a href="{{ route('password.request') }}">Lupa password?</a>
+                <a href="{{ route('password.check.form') }}">Lupa password?</a>
+
             </div>
 
             <button type="submit" class="btn-primary full">

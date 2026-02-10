@@ -18,12 +18,9 @@
 
             <input
                 type="text"
-                name="otp"
-                placeholder="Masukkan kode OTP"
                 class="auth-input"
                 required
             >
-            @error('otp')
                 <div class="status pending">{{ $message }}</div>
             @enderror
 

@@ -2,61 +2,55 @@
 
 @section('content')
 
-<div style="max-width:400px; margin:80px auto; padding:24px; background:white; border-radius:8px">
+<div class="auth-wrapper">
+    <div class="auth-card">
 
-    <p style="font-size:14px; color:#4b5563; margin-bottom:16px">
-        Forgot your password? No problem.
-        Enter your email address and we will send you a password reset link.
-    </p>
+        <h2 class="auth-title">
+            Lupa Password
+        </h2>
 
-    {{-- Session status --}}
-    @if (session('status'))
-        <div style="margin-bottom:12px; color:green; font-size:14px">
-            {{ session('status') }}
-        </div>
-    @endif
+        <p class="auth-desc">
+            Masukkan email akun kamu untuk melanjutkan reset password.
+        </p>
 
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <div style="margin-bottom:16px">
-            <label for="email" style="display:block; margin-bottom:6px">
-                Email
-            </label>
+        <form method="POST" action="{{ route('password.reset.simple') }}" class="auth-form">
+            @csrf
 
             <input
                 type="email"
                 name="email"
-                id="email"
                 value="{{ old('email') }}"
+                placeholder="Email"
+                class="auth-input"
                 required
                 autofocus
-                style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:6px"
             >
+            <div style="margin-bottom:16px">
+                <label>Password Baru</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <div style="margin-bottom:16px">
+                <label>Konfirmasi Password</label>
+                <input type="password" name="password_confirmation" required>
+            </div>
 
             @error('email')
-                <div style="color:red; font-size:13px; margin-top:4px">
+                <div class="form-error">
                     {{ $message }}
                 </div>
             @enderror
+
+            <button type="submit" class="btn-primary full">
+                Lanjutkan
+            </button>
+        </form>
+
+        <div class="auth-switch">
+            <a href="{{ route('login') }}">Kembali ke login</a>
         </div>
 
-        <button
-            type="submit"
-            style="
-                width:100%;
-                background:#16a34a;
-                color:white;
-                padding:10px;
-                border:none;
-                border-radius:6px;
-                cursor:pointer;
-            "
-        >
-            Email Password Reset Link
-        </button>
-    </form>
-
+    </div>
 </div>
 
 @endsection

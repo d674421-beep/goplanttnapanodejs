@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // REGISTER ALIAS MIDDLEWARE DI SINI (WAJIB)
         $middleware->alias([
-            'otp.verified' => \App\Http\Middleware\OtpVerified::class,
+            
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
 

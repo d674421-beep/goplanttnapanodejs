@@ -12,8 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('password_reset_otp')->nullable();
-            $table->timestamp('password_reset_otp_expires_at')->nullable();
         });
 
     }

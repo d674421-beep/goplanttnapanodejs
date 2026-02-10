@@ -30,7 +30,6 @@ class AdminUserSeeder extends Seeder
                 'password'             => Hash::make($password),
                 'is_admin'             => true,
                 'email_verified_at'    => now(),
-                'email_otp_expires_at' => null,
             ]);
 
             $this->command->info('Admin user berhasil dibuat.');
@@ -42,7 +41,6 @@ class AdminUserSeeder extends Seeder
             'name'                 => $name,
             'is_admin'             => true,
             'email_verified_at'    => now(),
-            'email_otp_expires_at' => null,
         ]);
 
         // Update password hanya jika beda

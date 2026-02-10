@@ -3,18 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\View\View;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class PasswordResetLinkController extends Controller
 {
     /**
-     * Display the password reset link request view.
+     * Tampilkan form lupa password
      */
     public function create(): View
     {
@@ -22,32 +19,25 @@ class PasswordResetLinkController extends Controller
     }
 
     /**
-     * Handle an incoming password reset link request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Proses email dan simpan ke session
      */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'email' => ['required','email','exists:users,email'],
+            'email' => ['required', 'email'],
         ]);
 
         $user = User::where('email', $request->email)->first();
 
-        $otp = rand(100000, 999999);
+        if (! $user) {
+            return back()
+                ->withErrors(['email' => 'Email tidak ditemukan.'])
+                ->withInput();
+        }
 
-        $user->update([
-            'password_reset_otp' => $otp,
-            'password_reset_otp_expires_at' => now()->addMinutes(10),
-        ]);
+        // Simpan email ke session sementara
+        session(['password_reset_email' => $user->email]);
 
-        Session::put('password_reset_email', $user->email);
-
-        Mail::raw("Kode OTP reset password kamu: $otp", function ($msg) use ($user) {
-            $msg->to($user->email)->subject('OTP Reset Password GoPlant');
-        });
-
-        return redirect()->route('password.reset')
-            ->with('status','OTP dikirim ke email.');
+        return redirect()->route('password.reset');
     }
 }

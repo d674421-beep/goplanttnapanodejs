@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\PostController;
 use App\Http\Controllers\User\PostCommentController;
-use App\Http\Controllers\Auth\OtpVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,35 +25,15 @@ Route::get('/dashboard', function () {
 
     return redirect()->route('user.dashboard');
 
-})->middleware(['auth', 'otp.verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-/*
-|--------------------------------------------------------------------------
-| OTP VERIFICATION ROUTES
-|--------------------------------------------------------------------------
-| User HARUS login dulu, tapi BELUM boleh masuk dashboard
-*/
-Route::middleware('auth')->group(function () {
-
-    Route::get('/verify-otp',
-        [OtpVerificationController::class, 'show']
-    )->name('otp.verify.form');
-
-    Route::post('/verify-otp',
-        [OtpVerificationController::class, 'verify']
-    )->name('otp.verify');
-
-    Route::post('/resend-otp',
-        [OtpVerificationController::class, 'resend']
-    )->name('otp.resend');
-});
 
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'otp.verified', 'admin'])
+Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -133,7 +112,7 @@ Route::middleware(['auth', 'otp.verified', 'admin'])
 | USER ROUTES
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'otp.verified'])
+Route::middleware(['auth'])
     ->prefix('user')
     ->name('user.')
     ->group(function () {
@@ -250,7 +229,7 @@ Route::middleware(['auth', 'otp.verified'])
 | PROFILE
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'otp.verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile',
         [ProfileController::class, 'edit']

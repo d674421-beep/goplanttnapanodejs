@@ -57,9 +57,6 @@ class Kernel extends HttpKernel
         // 🧑‍💼 ROLE
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
 
-        // 🔐 OTP VERIFICATION (INI YANG BARU)
-        'otp.verified' => \App\Http\Middleware\OtpVerified::class,
-
         // ⏱️ THROTTLE
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 

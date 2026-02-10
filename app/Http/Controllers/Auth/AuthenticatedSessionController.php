@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -23,18 +24,24 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-	{
-		$request->authenticate();
-		$request->session()->regenerate();
+    {
+        try {
+            $request->authenticate();
+        } catch (ValidationException $e) {
 
-		if (auth()->user()->is_admin) {
-			return redirect()->route('admin.dashboard');
-		}
+            return back()
+                ->withInput($request->only('email'))
+                ->with('status', 'Email atau password salah.');
+        }
 
-		return redirect()->route('dashboard');
-	}
+        $request->session()->regenerate();
 
+        if (auth()->user()->is_admin) {
+            return redirect()->route('admin.dashboard');
+        }
 
+        return redirect()->route('dashboard');
+    }
 
     /**
      * Destroy an authenticated session.
@@ -44,19 +51,8 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');
     }
-	
-	public function handle($request, Closure $next)
-	{
-		if (!auth()->check() || !auth()->user()->is_admin) {
-			abort(403);
-		}
-
-		return $next($request);
-	}
-
 }
