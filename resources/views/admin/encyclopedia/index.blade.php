@@ -94,12 +94,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.openDeleteModal = function(id) {
         deleteForm.action = `/admin/encyclopedia/${id}`;
-        deleteModal.classList.remove('hidden');
+        deleteModal.classList.add('show');
     }
 
     window.closeDeleteModal = function() {
-        deleteModal.classList.add('hidden');
+        deleteModal.classList.remove('show');
     }
+
 
     // Klik overlay untuk close modal
     deleteModal.addEventListener('click', function(e) {
