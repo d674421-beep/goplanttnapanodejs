@@ -71,9 +71,14 @@ class EncyclopediaController extends Controller
 		]);
 
 		if ($request->hasFile('image')) {
-			$data['image'] = $request->file('image')
-				->store('encyclopedia', 'public');
+			$file = $request->file('image');
+			$filename = time().'_'.$file->getClientOriginalName();
+
+			$file->move(public_path('uploads/encyclopedia'), $filename);
+
+			$data['image'] = 'uploads/encyclopedia/'.$filename;
 		}
+
 
 		$data['created_by'] = auth()->id();
 
@@ -103,8 +108,12 @@ class EncyclopediaController extends Controller
 
 		// jika upload gambar baru
 		if ($request->hasFile('image')) {
-			$data['image'] = $request->file('image')
-				->store('encyclopedia', 'public');
+			$file = $request->file('image');
+			$filename = time().'_'.$file->getClientOriginalName();
+
+			$file->move(public_path('uploads/encyclopedia'), $filename);
+
+			$data['image'] = 'uploads/encyclopedia/'.$filename;
 		}
 
 		$item->update($data);

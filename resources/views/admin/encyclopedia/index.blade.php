@@ -29,8 +29,9 @@
                 <h3 class="item-title mb-2">{{ $item->title }}</h3>
 
                 @if($item->image)
-                    <img src="{{ asset('storage/'.$item->image) }}" class="item-image mb-2">
+                    <img src="{{ asset($item->image) }}" class="item-image mb-2">
                 @endif
+
 
                 <p class="item-content mb-2">{{ $item->content }}</p>
 
