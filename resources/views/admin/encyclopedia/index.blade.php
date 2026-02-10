@@ -18,7 +18,7 @@
             <option value="za" {{ request('sort') === 'za' ? 'selected' : '' }}>Judul (Z–A)</option>
         </select>
         <button type="submit" class="btn btn-sort">Terapkan</button>
-        <a href="{{ route('admin.encyclopedia.index') }}" class="btn btn-secondary">Reset</a>
+        <a href="{{ route('admin.encyclopedia.index') }}" class="btn btn-view">Reset</a>
     </form>
 
     @if($data->isEmpty())
@@ -29,11 +29,10 @@
                 <h3 class="item-title mb-2">{{ $item->title }}</h3>
 
                 @if($item->image)
-                    <img src="{{ asset($item->image) }}" class="item-image mb-2">
+                    <img src="{{ asset($item->image) }}" class="item-image mb-2" alt="{{ $item->title }}">
                 @endif
 
-
-                <p class="item-content mb-2">{{ $item->content }}</p>
+                <p class="item-content mb-2">{{ Str::limit($item->content, 200) }}</p>
 
                 @if($item->video_url)
                     @php
@@ -49,34 +48,41 @@
                         <iframe
                             class="item-video mb-2"
                             src="https://www.youtube.com/embed/{{ $videoId }}"
-                            allowfullscreen>
+                            allowfullscreen
+                            title="{{ $item->title }}">
                         </iframe>
                     @endif
                 @endif
 
-
-                <div class="action-buttons flex gap-2">
+                <div class="action-buttons">
                     <a href="{{ route('admin.encyclopedia.edit', $item->id) }}" class="btn btn-edit">Edit</a>
-                    <button onclick="openDeleteModal({{ $item->id }})" class="btn btn-delete">Hapus</button>
+                    <button type="button" onclick="openDeleteModal({{ $item->id }})" class="btn btn-delete">Hapus</button>
                 </div>
             </div>
         @endforeach
+
+        {{-- Pagination jika ada --}}
+        @if(method_exists($data, 'links'))
+            <div class="mt-4">
+                {{ $data->links() }}
+            </div>
+        @endif
     @endif
 </div>
 
 {{-- ================= MODAL DELETE ================= --}}
-<div id="deleteEncyclopediaModal" class="modal-overlay hidden">
-    <div class="modal-box card p-6 max-w-md w-full">
-        <h3 class="modal-title text-lg font-bold mb-3">Hapus Ensiklopedia</h3>
-        <p class="modal-text text-muted mb-6">
+<div id="deleteEncyclopediaModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3 class="modal-title">Hapus Ensiklopedia</h3>
+        <p class="modal-text">
             Apakah kamu yakin ingin menghapus data ini?
             <br>
             <strong class="text-danger">Tindakan ini tidak dapat dibatalkan.</strong>
         </p>
 
-        <div class="modal-actions flex justify-end gap-3">
-            <button onclick="closeDeleteModal()" class="btn btn-secondary">Batal</button>
-            <form id="deleteEncyclopediaForm" method="POST">
+        <div class="modal-actions">
+            <button type="button" onclick="closeDeleteModal()" class="btn btn-view">Batal</button>
+            <form id="deleteEncyclopediaForm" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-delete">Ya, Hapus</button>
@@ -85,27 +91,79 @@
     </div>
 </div>
 
-
 {{-- ================= SCRIPT ================= --}}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
+    'use strict';
+
     const deleteModal = document.getElementById('deleteEncyclopediaModal');
     const deleteForm = document.getElementById('deleteEncyclopediaForm');
 
+    // Fungsi buka modal
     window.openDeleteModal = function(id) {
+        if (!deleteModal || !deleteForm) {
+            console.error('Modal atau Form tidak ditemukan!');
+            return;
+        }
+        
         deleteForm.action = `/admin/encyclopedia/${id}`;
         deleteModal.classList.add('show');
-    }
+        
+        // Prevent body scroll saat modal terbuka
+        document.body.style.overflow = 'hidden';
+    };
 
+    // Fungsi tutup modal
     window.closeDeleteModal = function() {
+        if (!deleteModal) return;
+        
         deleteModal.classList.remove('show');
+        
+        // Restore body scroll
+        document.body.style.overflow = '';
+    };
+
+    // Klik di luar modal untuk menutup
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === deleteModal) {
+                closeDeleteModal();
+            }
+        });
     }
 
-
-    // Klik overlay untuk close modal
-    deleteModal.addEventListener('click', function(e) {
-        if (e.target === deleteModal) closeDeleteModal();
+    // Tutup modal dengan ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && deleteModal.classList.contains('show')) {
+            closeDeleteModal();
+        }
     });
-});
+
+    // Konfirmasi sebelum submit
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function(e) {
+            // Bisa ditambahkan loading state di sini
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Menghapus...';
+            }
+        });
+    }
+})();
 </script>
+
+@if(session('success'))
+<script>
+    // Auto hide success message after 3 seconds
+    setTimeout(function() {
+        const alert = document.querySelector('.alert-success');
+        if (alert) {
+            alert.style.transition = 'opacity 0.3s';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 300);
+        }
+    }, 3000);
+</script>
+@endif
 @endsection
