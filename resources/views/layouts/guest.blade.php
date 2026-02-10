@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>GoPlant</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{-- ===== THEME INIT (ANTI FLASH) ===== --}}
+    {{-- ===== THEME INIT (ANTI FLASH / FOUC) ===== --}}
     <script>
         (function () {
             try {
-                const theme = localStorage.getItem('theme');
+                const savedTheme = localStorage.getItem('theme');
                 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-                if (theme === 'dark' || (!theme && systemDark)) {
+                if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
                     document.documentElement.classList.add('dark');
                 }
-
-                document.documentElement.classList.add('theme-ready');
             } catch (e) {
+                // ignore
+            } finally {
                 document.documentElement.classList.add('theme-ready');
             }
         })();
@@ -42,32 +41,34 @@
 <body>
 
     {{-- ===== THEME TOGGLE (LANDING ONLY) ===== --}}
-    <button id="toggleThemeLanding"
-            class="btn-theme landing-theme-btn"
-            aria-label="Toggle theme">
+    <button
+        id="toggleThemeLanding"
+        class="btn-theme landing-theme-btn"
+        aria-label="Ganti tema"
+        type="button"
+    >
         <span id="themeIcon">🌓</span>
     </button>
 
     {{-- CONTENT --}}
     @yield('content')
 
-    {{-- ===== THEME SCRIPT ===== --}}
+    {{-- ===== THEME TOGGLE SCRIPT ===== --}}
     <script>
         (function () {
-            const toggleBtn = document.getElementById('toggleThemeLanding');
+            const btn  = document.getElementById('toggleThemeLanding');
             const icon = document.getElementById('themeIcon');
+
+            if (!btn || !icon) return;
 
             function updateIcon() {
                 const isDark = document.documentElement.classList.contains('dark');
-                if (icon) {
-                    icon.textContent = isDark ? '☀️' : '🌓';
-                }
+                icon.textContent = isDark ? '☀️' : '🌓';
             }
 
-            // set icon on load
             updateIcon();
 
-            toggleBtn?.addEventListener('click', function () {
+            btn.addEventListener('click', function () {
                 document.documentElement.classList.toggle('dark');
                 const isDark = document.documentElement.classList.contains('dark');
 
