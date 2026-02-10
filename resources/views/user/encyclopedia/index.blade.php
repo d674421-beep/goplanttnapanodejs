@@ -54,8 +54,9 @@
 
                 {{-- Gambar --}}
                 @if($item->image)
-                    <img src="{{ asset('storage/'.$item->image) }}"
-                         class="item-image">
+                    <img src="{{ asset($item->image) }}"
+                        class="item-image">
+
                 @endif
 
                 {{-- Ringkasan --}}
