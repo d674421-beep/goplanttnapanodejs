@@ -5,8 +5,10 @@
     <title>GoPlant</title>
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
 </head>
-<body>
+<body class="light">
+
 
     <!-- THEME TOGGLE (Landing Only) -->
     <button id="toggleThemeLanding" class="btn-theme landing-theme-btn">🌓</button>
