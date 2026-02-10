@@ -66,27 +66,30 @@ body.dark .modal-box {
 body.dark .modal-text {
     color: #9ca3af;
 }
-</style>
-
+    </style>
 
     <script>
-        // ===== Dark Mode Init =====
+        // ===== Dark Mode Init ===== 
         (function () {
             try {
                 const theme = localStorage.getItem('theme');
                 const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                // 🔥 UBAH: Gunakan document.body, bukan documentElement
                 if (theme === 'dark' || (!theme && systemDark)) {
-                    document.documentElement.classList.add('dark');
+                    document.body.classList.add('dark');
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error('Theme init error:', e);
+            }
         })();
     </script>
 </head>
 <body>
     <!-- TOPBAR -->
     <div class="topbar">
-        <button id="toggleTheme" class="btn-theme">🌓</button>
-        <button id="btnLogoutTop" class="btn-logout-top">Logout</button>
+        <button id="toggleTheme" class="btn btn-view">🌙 Dark Mode</button>
+        <button id="btnLogoutTop" class="btn btn-delete">Logout</button>
     </div>
 
     <!-- SIDEBAR -->
@@ -103,36 +106,48 @@ body.dark .modal-text {
     <!-- LOGOUT MODAL -->
     <div id="logoutModal" class="modal-overlay">
         <div class="modal-box">
-        <div class="modal-title">Konfirmasi Logout</div>
+            <div class="modal-title">Konfirmasi Logout</div>
 
-        <div class="modal-text">
-            Apakah kamu yakin ingin keluar dari akun admin?
-        </div>
+            <div class="modal-text">
+                Apakah kamu yakin ingin keluar dari akun admin?
+            </div>
 
-        <div class="modal-actions">
-            <button id="btnCancelLogout" class="btn btn-secondary">
-                Batal
-            </button>
-
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-delete">
-                    Ya, Logout
+            <div class="modal-actions">
+                <button id="btnCancelLogout" class="btn btn-view">
+                    Batal
                 </button>
-            </form>
+
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-delete">
+                        Ya, Logout
+                    </button>
+                </form>
+            </div>
         </div>
-</div>
-
-
     </div>
 
     <!-- ===== Scripts ===== -->
     <script>
         // ===== Dark Mode Toggle =====
-        document.getElementById('toggleTheme')?.addEventListener('click', () => {
-            const html = document.documentElement;
-            html.classList.toggle('dark');
-            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        document.getElementById('toggleTheme')?.addEventListener('click', function() {
+            // 🔥 UBAH: Gunakan document.body
+            document.body.classList.toggle('dark');
+            
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            
+            // 🎨 Update button text
+            this.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        });
+
+        // ===== Set initial button text =====
+        window.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('toggleTheme');
+            if (toggleBtn) {
+                const isDark = document.body.classList.contains('dark');
+                toggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+            }
         });
 
         // ===== Modal Logic =====
@@ -142,16 +157,27 @@ body.dark .modal-text {
 
         btnLogoutTop?.addEventListener('click', () => {
             logoutModal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent scroll
         });
 
         btnCancelLogout?.addEventListener('click', () => {
             logoutModal.classList.remove('show');
+            document.body.style.overflow = ''; // Restore scroll
         });
 
         // Close modal on click outside box
         logoutModal?.addEventListener('click', (e) => {
             if(e.target === logoutModal) {
                 logoutModal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && logoutModal.classList.contains('show')) {
+                logoutModal.classList.remove('show');
+                document.body.style.overflow = '';
             }
         });
     </script>
